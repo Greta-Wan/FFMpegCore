@@ -551,9 +551,9 @@ namespace FFMpegCore.Test
                     .WithGifPaletteArgument(streamIndex, size))
                 .Arguments;
 
-            Assert.AreEqual($"""
-                -i "input.mp4" -filter_complex "[0:v] fps=12,scale=w={size.Width}:h={size.Height},split [a][b];[a] palettegen=max_colors=32 [p];[b][p] paletteuse=dither=bayer" "output.gif"
-                """, str);
+            Assert.AreEqual(@"
+                 -i ""input.mp4"" -filter_complex ""[0:v] fps=12,scale=w={size.Width}:h={size.Height},split [a][b];[a] palettegen=max_colors=32 [p];[b][p] paletteuse=dither=bayer"" ""output.gif""
+                 ", str);
         }
 
         [TestMethod]
@@ -567,9 +567,9 @@ namespace FFMpegCore.Test
                     .WithGifPaletteArgument(streamIndex, null, 10))
                 .Arguments;
 
-            Assert.AreEqual($"""
-                -i "input.mp4" -filter_complex "[{streamIndex}:v] fps=10,split [a][b];[a] palettegen=max_colors=32 [p];[b][p] paletteuse=dither=bayer" "output.gif"
-                """, str);
+            Assert.AreEqual(@"
+                -i ""input.mp4"" -filter_complex ""[{streamIndex}:v] fps=10,split [a][b];[a] palettegen=max_colors=32 [p];[b][p] paletteuse=dither=bayer"" ""output.gif""
+                ", str);
         }
 
         [TestMethod]
@@ -581,9 +581,9 @@ namespace FFMpegCore.Test
                     .OutputToFile("output.ts", overwrite: false, args => args.CopyChannel().ForceFormat("mpegts"))
                     .OutputToUrl("http://server/path", options => options.ForceFormat("webm")))
                     .Arguments;
-            Assert.AreEqual($"""
-                -i "input.mp4" -c:a copy -c:v copy "output.mp4" -y -c:a copy -c:v copy -f mpegts "output.ts" -f webm http://server/path
-                """, str);
+            Assert.AreEqual(@"
+                -i ""input.mp4"" -c:a copy -c:v copy ""output.mp4"" -y -c:a copy -c:v copy -f mpegts ""output.ts"" -f webm http://server/path
+                ", str);
         }
 
         [TestMethod]
@@ -594,9 +594,9 @@ namespace FFMpegCore.Test
                     .OutputToFile("sd.mp4", overwrite: true, args => args.Resize(1200, 720))
                     .OutputToFile("hd.mp4", overwrite: false, args => args.Resize(1920, 1080)))
                     .Arguments;
-            Assert.AreEqual($"""
-                -i "input.mp4" -s 1200x720 "sd.mp4" -y -s 1920x1080 "hd.mp4"
-                """, str);
+            Assert.AreEqual(@"
+                -i ""input.mp4"" -s 1200x720 ""sd.mp4"" -y -s 1920x1080 ""hd.mp4""
+                ", str);
         }
 
         [TestMethod]
@@ -607,9 +607,9 @@ namespace FFMpegCore.Test
                     .OutputToFile("output.mp4", overwrite: false, args => args.WithFastStart())
                     .OutputToUrl("http://server/path", options => options.ForceFormat("mpegts").SelectStream(0, channel: Channel.Video)))
                     .Arguments;
-            Assert.AreEqual($"""
-                -i "input.mp4" -f tee "[movflags=faststart]output.mp4|[f=mpegts:select=\'0:v:0\']http://server/path"
-                """, str);
+            Assert.AreEqual(@"
+                -i ""input.mp4"" -f tee ""[movflags=faststart]output.mp4|[f=mpegts:select='0:v:0']http://server/path""
+                ", str);
         }
     }
 }
